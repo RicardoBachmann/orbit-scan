@@ -1,10 +1,14 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 function App() {
   const mapRef = useRef();
   const mapContainerRef = useRef();
+
+  const [sateliteData, setSateliteData] = useState([]); // saved data in empty arr
+  const [loadData, setLoadData] = useState(true); // initial load
+  const [errorData, setErrorData] = useState(false); // set default err on false
 
   useEffect(() => {
     mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_KEY;
@@ -19,6 +23,20 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    fetch("http://localhost:3001/api/satellite")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setSateliteData(data);
+        setLoadData(false);
+      })
+      .catch((error) => {
+        setErrorData(true);
+        setLoadData(false);
+      });
+  }, []);
+  console.log("Data:", sateliteData);
   return (
     <>
       <div id="map-container" ref={mapContainerRef}></div>

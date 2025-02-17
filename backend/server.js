@@ -10,7 +10,7 @@ console.log("API Key:", process.env.API_KEY);
 //Middleware
 app.use(
   cors({
-    origin: "http://localhost:5173", // Vite verwendet standardmäßig Port 5173
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
   })
 );
 app.use(express.json());
